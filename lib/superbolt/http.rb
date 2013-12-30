@@ -1,7 +1,8 @@
-require "superbolt/http/version"
+require 'ostruct'
+require 'json'
+require 'uri'
 
-module Superbolt
-  module Http
-    # Your code goes here...
-  end
-end
+require 'rest-client'
+
+require "superbolt/http/version"
+require "superbolt/http/connection"

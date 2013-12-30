@@ -6,7 +6,7 @@ require 'superbolt/http/version'
 Gem::Specification.new do |spec|
   spec.name          = "superbolt-http"
   spec.version       = Superbolt::Http::VERSION
-  spec.authors       = ["Sowjanya"]
+  spec.authors       = ["Sowjanya Mudunuri"]
   spec.email         = ["developers@socialchorus.com"]
   spec.description   = %q{An easy http interface for RabbitMQ}
   spec.summary       = %q{An easy http interface for RabbitMQ}
@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency "superbolt"
+  spec.add_runtime_dependency "rest-client"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
