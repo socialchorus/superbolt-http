@@ -1,42 +1,36 @@
 module Superbolt
   module Http
     class Connection < OpenStruct
-      class << self 
-        attr_accessor :url
-      end
-
-      def self.all
-        raise NoConnectionUrl unless url
-        rest_client_get(base_url).map do |conn|
-          new conn
-        end
-      end
-
-      def self.get(name)
-        raise NoConnectionUrl unless url
-        new rest_client_get(base_url + "/#{name}")
-      end
-
-      def self.delete(name)
-        raise NoConnectionUrl unless url
-        rest_client_delete(base_url + "/#{name}")
-      end
-
-
-      private
+      extend Http
 
       def self.base_url
         "#{url}/api/connections"
       end
 
-      def self.rest_client_get(uri)
-        JSON.parse(
-          RestClient.get(URI.escape(uri))
-        )
+      def self.get_connections
+        adaptor(base_url).get
       end
 
-      def self.rest_client_delete(uri)
-        RestClient.delete URI.escape(uri)
+      def self.all
+        get_connections.map do |connection|
+          new connection
+        end
+      end
+
+      def self.adaptor(uri)
+        raise NoConnectionUrl unless url
+        Adaptor.new(uri)
+      end
+
+      def delete
+        begin
+          self.class.adaptor(connection_uri).delete
+        rescue Bunny::ConnectionForced => e
+        end
+      end
+
+      def connection_uri
+        self.class.base_url + "/#{name}"
       end
 
       class NoConnectionUrl < StandardError; end

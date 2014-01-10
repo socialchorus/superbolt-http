@@ -39,40 +39,11 @@ describe Superbolt::Http::Connection do
     end
   end
 
-
-  describe '.get' do
-    let(:get_connection) { Superbolt::Http::Connection.get('somename') }
-
-    context 'when a url is not defined' do
-      before do
-        Superbolt::Http::Connection.url = nil
-      end
-
-      it "should raise an error" do
-        expect { get_connection }.to raise_error(Superbolt::Http::Connection::NoConnectionUrl)
-      end
-    end
-
-    context 'when a url is defined' do
-      before do
-        Superbolt::Http::Connection.url = url
-        RestClient.should_receive(:get)
-          .with("http://guest:guest@localhost:15672/api/connections/somename")
-          .and_return(single_connection)
-      end
-
-      it 'returns a single connection specified by the name' do
-        get_connection.name.should == "somename"
-        get_connection.should be_an_instance_of(Superbolt::Http::Connection)
-      end
-    end
-  end
-  
-
-  describe '.delete' do
-    let(:delete_connection) { Superbolt::Http::Connection.delete('somename') }
+  describe '#delete' do
+    let(:delete_connection) { connection.delete }
 
     context 'when a url is not defined' do
+      let(:connection) { Superbolt::Http::Connection.new({"name" => "somename"}) }
       before do
         Superbolt::Http::Connection.url = nil
       end
@@ -83,10 +54,15 @@ describe Superbolt::Http::Connection do
     end
 
     context "when a url is defined" do
+      let(:delete_connection) { connection.delete }
+      let(:connection) { 
+        puts "url: #{Superbolt::Http::Connection.url}"
+        Superbolt::Http::Connection.new({"name" => "somename"}) }
+      
       before do
         Superbolt::Http::Connection.url = url
       end
-
+      
       it 'sends a delete request to the right url' do
         RestClient.should_receive(:delete)
           .with("http://guest:guest@localhost:15672/api/connections/somename")

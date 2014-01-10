@@ -8,14 +8,21 @@ describe Superbolt::Http::Connection, 'functional specs' do
     Superbolt::Http::Connection.url = url
   end
 
-  it ".all should return two connections" do
-    Bunny.new.start
-    Bunny.new.start
-    expect(Superbolt::Http::Connection.all.count).to eq(2)
+  describe ".all" do
+    it "should return the right number of connections" do
+      10.times { Bunny.new.start }
+      Superbolt::Http::Connection.all.count.should == 10  
+    end
   end
 
-  it ".delete should reduce the connections" do
-    # all_connections = Superbolt::Http::Connection.all 
-    # Superbolt::Http::Connection.delete(all_connections[0].name)
+  describe ".delete" do
+    it "should reduce the connections" do
+      all_connections = Superbolt::Http::Connection.all
+      all_connections.each { |connection| connection.delete }
+      sleep 5
+      Superbolt::Http::Connection.all.each do |conn|
+        conn.state.should == "closed"
+      end
+    end
   end
 end
