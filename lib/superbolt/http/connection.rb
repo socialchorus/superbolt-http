@@ -26,6 +26,7 @@ module Superbolt
         begin
           self.class.adaptor(connection_uri).delete
         rescue Bunny::ConnectionForced => e
+          warn "Connection Forced to Close"
         end
       end
 
