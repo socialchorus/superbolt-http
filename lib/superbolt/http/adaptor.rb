@@ -9,16 +9,15 @@ module Superbolt
 
       def get
         JSON.parse(
-          RestClient.get escaped_uri
+          RestClient.get uri
         )
       end
 
       def delete
-        RestClient.delete escaped_uri
-      end
-
-      def escaped_uri
-        URI.escape(uri)
+        begin
+          RestClient.delete uri
+         rescue RestClient::InternalServerError => e
+        end
       end
     end
   end

@@ -31,7 +31,11 @@ module Superbolt
       end
 
       def connection_uri
-        self.class.base_url + "/#{name}"
+        "#{self.class.base_url}/#{escape_name}"
+      end
+
+      def escape_name
+        URI.escape(name)
       end
 
       class NoConnectionUrl < StandardError; end
